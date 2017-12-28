@@ -8,3 +8,4 @@ dbServerEndpoint: '/db'
 appDatabase: 'app'
 contentRoot: '../client/content'
 editorClientTemplates: '../client/tangy-forms/editor'
+
