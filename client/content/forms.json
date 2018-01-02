@@ -1,26 +1,22 @@
 [
   {
-    "title": "Field Demos",
-    "src": "field-demo/form.html"
-  },
-  {
-    "title": "Item Demo",
-    "src": "item-demo/form.html"
-  },
-  {
-    "title": "form 2",
-    "src": "form2/form.html"
-  },
-  {
-    "title": "Acasi demo",
-    "src": "acasi-demo/form.html"
+    "title": "Student Registration",
+    "src": "student-registration/form.html"
   },
   {
     "title": "Class forms",
     "src": "class-forms/form.html"
   },
   {
-    "title": "Student Registration",
-    "src": "student-registration/form.html"
+    "title": "Grid Test 1",
+    "src": "grid1/form.html"
+  },
+  {
+    "title": "Radiobuttons",
+    "src": "radiobuttons/form.html"
+  },
+  {
+    "title": "Checkboxes",
+    "src": "checkboxes/form.html"
   }
 ]

@@ -7,10 +7,12 @@ import '../../node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import '../../node_modules/@polymer/paper-item/paper-icon-item.js';
 import '../../node_modules/@polymer/paper-item/paper-item-body.js';
 import '../../node_modules/sortable-list/sortable-list';
+// import '../../node_modules/s-table/s-table.js';
 import '../tangy-form/tangy-form.js';
 import '../tangy-textarea/tangy-textarea.js';
 import '../tangy-acasi/tangy-acasi.js';
 import {TangyFormService} from "../tangy-form/tangy-form-service";
+import '../../node_modules/s-table/all-imports.js'
 
 /**
  * `tangy-class-app`
@@ -73,7 +75,7 @@ class TangyClassApp extends Element {
         text-align: center;  
         background-color: pink;
       }
-      paper-icon-button.small {
+    paper-icon-button.small {
       width: 30px;
       height: 30px;
     }
@@ -97,66 +99,124 @@ class TangyClassApp extends Element {
       margin-left: 10px;
       margin-right: 20px;
     }
+    #forms {
+    margin:1em;
+    }
+   /*td, th {*/
+    /*padding: 8px;*/
+    /*box-sizing: border-box;*/
+    /*white-space: nowrap;*/
+  /*}*/
+  /*td:nth-of-type(1),*/
+  /*th:nth-of-type(1) {*/
+    /*background-color: rgba(255, 0, 255, 0.2);*/
+  /*}*/
+  /*tr.iron-selected td {*/
+    /*background-color: rgba(0, 0, 0, 0.1);*/
+  /*}*/
+  /*tr:hover td {*/
+    /*background-color: rgba(0, 0, 0, 0.2);*/
+  /*}*/
+  /*tr td.iron-selected:not(:nth-of-type(1)) {*/
+    /*background-color: rgba(255, 255, 0, 0.2);*/
+  /*}*/
+  
+  #container {
+    display: grid;
+    /*position:fixed*/
+    grid-template-columns: 20% 80%;
+    background-color: aquamarine;
+    margin: 1em;
+  }
+  
+  
+  #container-left {
+    display: grid;
+    position:fixed
+    /*grid-template-columns: 20% 80%;*/
+    background-color: aquamarine;
+  }
+  
+  #container-right {
+    display: grid;
+    /*grid-template-columns: 100px 100px 100px 100px 100px;*/
+    grid-template-columns: repeat(12, [col] 100px ) ;
+    grid-auto-columns: 100px;
+    background-color: beige;
+  }
+  
+   /*.box {*/
+     /*!*background-color: #444;*!*/
+     /*color: #fff;*/
+     /*border-radius: 5px;*/
+     /*padding: 10px;*/
+     /*!*font-size: 150%;*!*/
+   /*}*/
+   
+   .header {
+    background-color: #cddc39;
+   }
+  
+  /*.header {*/
+    /*padding: 5% 5% 5% 5%;*/
+  /*}*/
     </style>
     <div class="tangy-class-app--container">
     
-
     <div id="admin-menu">
-      
-    <h1>Admin menu</h1>
     
-    <div id="toolbar">
-        <a href="#form=/content/class-forms/form.html" on-click="formSelected"><paper-button raised class="navbutton">Configure your Class</paper-button></a>
-    </div>
-    
-     <div id="students"> 
-      
-      <div role="listbox">
-        <template is="dom-repeat" items="{{students}}">
-          <paper-icon-item class="fancy">
-              <div class="avatar blue" slot="item-icon"></div>
-              <paper-item-body two-line>
-                <div>[[item.student_name]]</div>
-                <div secondary>[[item.gender]], [[item.age]]</div>
-              </paper-item-body>
-              <paper-icon-button icon="star" alt="favourite this!">
-              </paper-icon-button>
-            </paper-icon-item>
-        </template>  
-      </div>
-        
-    </div>
-    
-    <div id="forms">
-       <p>&nbsp;</p>
-      <template is="dom-repeat" items="{{forms}}">
-          <paper-card class="form-link" alt="[[item.title]]" heading="[[item.title]]">
-              <div class="card-actions">
-                <a href="#form=/content/[[item.src]]" on-click="formSelected">
-                  <paper-button class="launch-form">
-                    <iron-icon icon="icons:launch">
-                  </iron-icon></paper-button>
-                  </a>
-                  <a href="#form=/content/[[item.src]]&edit=1" on-click="formSelected">
-                  <paper-button class="settings">
-                      <iron-icon icon="icons:settings"/>
-                  </paper-button>
-                  </a>
-              </div>
-          </paper-card>
-      </template>
-      <template is="dom-repeat" items="{{editorForms}}">
-        <paper-card class="form-link" alt="[[item.title]]" heading="[[item.title]]">
-          <div class="card-actions">
-            <a href="#form=/tangy-editor/[[item.src]]&new=1" on-click="formSelected">
-              <paper-button class="settings">
-                <iron-icon icon="icons:settings"/>
-              </paper-button>
-            </a>
+      <paper-card class="form-editor-link" alt="[[headerTitle]]" heading="[[headerTitle]]">
+        <div class="card-actions">
+          <div class="horizontal justified">
+          <!--<a href="/tangy-forms" on-click="formSelected"><paper-icon-button icon="home" on-click="showFormsList"></paper-icon-button></a>-->
+          <a href="#form=/content/class-forms/form.html" title="Configure Class" on-click="formSelected"><paper-icon-button icon="settings" data-item-title="Configure Class"></paper-icon-button></a>
           </div>
-        </paper-card>
-      </template>        
-    </div>
+        </div>
+      </paper-card>
+
+      <div id="container"> 
+        <div id="container-left">
+          <div class="box header">Student</div>
+          <template is="dom-repeat" items="{{students}}">
+                  <div class="box">[[item.student_name]]</div>
+          </template>  
+        </div>
+        <div id="container-right">
+          <template is="dom-repeat" items="{{forms}}">
+          <div class="box header">[[item.title]]</div>
+          </template>
+        </div>
+      </div>
+    
+      <div id="forms">
+        <h2>Administer Forms</h2>
+  
+        <div role="listbox">
+          <template is="dom-repeat" items="{{forms}}">
+            <paper-icon-item class="fancy">
+                <div class="avatar blue" slot="item-icon"></div>
+                <paper-item-body one-line>
+                  <div>[[item.title]]</div>
+                  <!--<div secondary>[[item.gender]], [[item.age]]</div>-->
+                </paper-item-body>
+                <!--<paper-icon-button icon="star" alt="favourite this!">-->
+                <!--</paper-icon-button>-->
+                <div>
+                  <a href="#form=/content/[[item.src]]" on-click="formSelected">
+                    <paper-button class="launch-form">
+                      <iron-icon icon="icons:launch">
+                    </iron-icon></paper-button>
+                    </a>
+                    <a href="#form=/content/[[item.src]]&edit=1" on-click="formSelected">
+                    <paper-button class="settings">
+                        <iron-icon icon="icons:settings"/>
+                    </paper-button>
+                    </a>
+                </div>
+              </paper-icon-item>
+          </template>  
+        </div>
+      </div>
     
     </div>
 
@@ -292,6 +352,10 @@ class TangyClassApp extends Element {
         type: Array,
         value: []
       },
+      classItems: {
+        type: Array,
+        value: []
+      },
       editorForms: {
         type: Array,
         value: []
@@ -401,6 +465,8 @@ class TangyClassApp extends Element {
       }
       this.addEventListener('tangy-form-item-list-opened', () => window['tangy-form-app-loading'].innerHTML = '')
     } else {
+      console.log("Making Dashboard the default for the Class demo.")
+      dashboard = true
       if (dashboard) {
         this.showDashboard()
         this.addEventListener('tangy-form-item-opened', () => window['tangy-form-app-loading'].innerHTML = '')
@@ -487,6 +553,7 @@ class TangyClassApp extends Element {
     this.$['form-item-listing'].hidden = true
     this.$['item-edit'].hidden = true
     this.$['item-create'].hidden = true
+    this.headerTitle = "Class Dashboard"
     document.querySelector("#content").setAttribute('style', 'display:none;')
     // Must reset base href path in case user is not currently at tangy-forms root.
     window['base-path-loader'].innerHTML = `<base href="/tangy-forms">`
@@ -502,6 +569,91 @@ class TangyClassApp extends Element {
     await this.service.initialize()
     let studentRegistrationFormId = 'student-registration'
     this.students = await this.service.getStudentRegistrations(studentRegistrationFormId)
+
+    // Get the list of forms
+    // let formSrc = '/content/field-demo/form.html'
+    // let formHtml = await fetch(formSrc)
+    // let innerHTML = await formHtml.text()
+    // this.form = innerHTML
+    // var doc = document.implementation.createHTMLDocument("New Document");
+    // doc.documentElement.innerHTML = innerHTML;
+    // let itemsNode = doc.querySelectorAll("tangy-form-item");
+    this.classItems = []
+    this.studentForms = new Map()
+    // for (let node of itemsNode) {
+    //   let item = {}
+    //   item.id = node.getAttribute('id')
+    //   item.src = node.getAttribute('src')
+    //   item.title = node.getAttribute('title')
+    //   // item.itemOrder = node.getAttribute('itemOrder')
+    //   item.formSrc = formSrc
+    //   this.classItems.push(item)
+    //   }
+    //populate the studentForms with students
+    for (let student of this.students) {
+      let studentId = student.id
+      console.log("studentId")
+    }
+    for (let form of this.forms) {
+      // get the form metadata
+      let formSrc = '/content/' + form.src
+      let formHtml = await fetch(formSrc)
+      let innerHTML = await formHtml.text()
+      this.form = innerHTML
+      var doc = document.implementation.createHTMLDocument("New Document");
+      doc.documentElement.innerHTML = innerHTML;
+      // let itemsNode = doc.querySelectorAll("tangy-form-item");
+      let formMetadata = doc.querySelector("tangy-form");
+      // for (let node of itemsNode) {
+      //   let item = {}
+      //   item.id = node.getAttribute('id')
+      //   item.src = node.getAttribute('src')
+      //   item.title = node.getAttribute('title')
+      //   // item.itemOrder = node.getAttribute('itemOrder')
+      //   item.formSrc = formSrc
+      //   this.classItems.push(item)
+      //   }
+      let formId = formMetadata.id
+      // get all responses for this form
+      let completedForms = []
+      // let itemId = item.id
+      console.log("getting responses for formId: " + formId)
+
+      try {
+        this.responses = await this.service.getResponsesByFormId(formId)
+      } catch (e) {
+        console.log("e: " + e)
+      }
+      console.log("formId: " + formId)
+      for (let response of this.responses) {
+        let studentId = response.studentId
+        let responseId = response.id
+        let _id = response._id
+
+        let progress = {
+          formId: formId,
+          responseId: responseId,
+          _id: _id
+        }
+        if (typeof studentId !== 'undefined') {
+          let studentForms = this.studentForms.get(studentId)
+          if (typeof studentForms !== 'undefined') {
+            // add the form to the student array.
+            studentForms.push(progress)
+          } else {
+            studentForms = []
+            studentForms.push(progress)
+            this.studentForms.set(studentId, studentForms)
+          }
+        } else {
+          let studentForms = []
+          studentForms.push(progress)
+          this.studentForms.set(studentId, studentForms)
+        }
+      }
+    }
+
+    console.log("this.studentForms: " + JSON.stringify(this.studentForms))
     window['tangy-form-app-loading'].innerHTML = ''
   }
 

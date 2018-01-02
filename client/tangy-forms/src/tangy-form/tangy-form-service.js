@@ -93,7 +93,7 @@ export class TangyFormService {
 
 var tangyFormDesignDoc = {
     _id: '_design/tangy-form',
-    version: '39',
+    version: '41',
     views: {
       formByFormId: {
         map: function(doc) {
@@ -148,7 +148,9 @@ var tangyFormDesignDoc = {
             // }
           } else {
             if (doc.hasOwnProperty('form')) {
+              debugger;
               if (doc.form.id === 'student-registration') {
+                debugger;
                 var sr = {}
                 // const nameObj = doc.inputs.filter(item => item.hasOwnProperty('name') && item.name === 'student_name')
                 for (let input of doc.inputs) {
