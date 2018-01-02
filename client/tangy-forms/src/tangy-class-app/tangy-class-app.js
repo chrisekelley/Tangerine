@@ -140,7 +140,7 @@ class TangyClassApp extends Element {
   #container-right {
     display: grid;
     /*grid-template-columns: 100px 100px 100px 100px 100px;*/
-    grid-template-columns: repeat(12, [col] 100px ) ;
+    grid-template-columns: repeat(6, [col] 100px ) ;
     grid-auto-columns: 100px;
     background-color: beige;
   }
@@ -185,6 +185,12 @@ class TangyClassApp extends Element {
           <template is="dom-repeat" items="{{forms}}">
           <div class="box header">[[item.title]]</div>
           </template>
+          <template is="dom-repeat" items="{{studentFormsArray}}">
+            <template is="dom-repeat" items="{{item.responses}}">
+                <div class="box">[[item.responses.length]]</div>
+            </template>
+          </template>
+          
         </div>
       </div>
     
@@ -420,6 +426,14 @@ class TangyClassApp extends Element {
         type: Array,
         value: []
       },
+      studentForms: {
+        type: Array,
+        value: []
+      },
+      studentFormsArray: {
+        type: Array,
+        value: []
+      },
     };
   }
 
@@ -486,6 +500,12 @@ class TangyClassApp extends Element {
       query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
     }
     return query;
+  }
+
+  itemLength(item) {
+    console.log("item: " + JSON.stringify(item))
+    // return item.responses.length
+    return "X"
   }
 
 
@@ -579,7 +599,8 @@ class TangyClassApp extends Element {
     // doc.documentElement.innerHTML = innerHTML;
     // let itemsNode = doc.querySelectorAll("tangy-form-item");
     this.classItems = []
-    this.studentForms = new Map()
+    // this.studentForms = new Map()
+    this.studentForms = []
     // for (let node of itemsNode) {
     //   let item = {}
     //   item.id = node.getAttribute('id')
@@ -589,71 +610,79 @@ class TangyClassApp extends Element {
     //   item.formSrc = formSrc
     //   this.classItems.push(item)
     //   }
-    //populate the studentForms with students
+
+    //populate the studentForms with students and studentForms array.
     for (let student of this.students) {
-      let studentId = student.id
-      console.log("studentId")
-    }
-    for (let form of this.forms) {
-      // get the form metadata
-      let formSrc = '/content/' + form.src
-      let formHtml = await fetch(formSrc)
-      let innerHTML = await formHtml.text()
-      this.form = innerHTML
-      var doc = document.implementation.createHTMLDocument("New Document");
-      doc.documentElement.innerHTML = innerHTML;
-      // let itemsNode = doc.querySelectorAll("tangy-form-item");
-      let formMetadata = doc.querySelector("tangy-form");
-      // for (let node of itemsNode) {
-      //   let item = {}
-      //   item.id = node.getAttribute('id')
-      //   item.src = node.getAttribute('src')
-      //   item.title = node.getAttribute('title')
-      //   // item.itemOrder = node.getAttribute('itemOrder')
-      //   item.formSrc = formSrc
-      //   this.classItems.push(item)
-      //   }
-      let formId = formMetadata.id
-      // get all responses for this form
-      let completedForms = []
-      // let itemId = item.id
-      console.log("getting responses for formId: " + formId)
+      let studentId = student._id
+      console.log("studentId: " + studentId)
+      // let studentForms = []
+      // this.studentForms.set(studentId, studentForms)
+      let studentResponses = {}
+      studentResponses.id = studentId
+      studentResponses.responses = []
 
-      try {
-        this.responses = await this.service.getResponsesByFormId(formId)
-      } catch (e) {
-        console.log("e: " + e)
-      }
-      console.log("formId: " + formId)
-      for (let response of this.responses) {
-        let studentId = response.studentId
-        let responseId = response.id
-        let _id = response._id
+      for (let form of this.forms) {
+        // get the form metadata
+        let formSrc = '/content/' + form.src
+        let formHtml = await fetch(formSrc)
+        let innerHTML = await formHtml.text()
+        this.form = innerHTML
+        var doc = document.implementation.createHTMLDocument("New Document");
+        doc.documentElement.innerHTML = innerHTML;
+        // let itemsNode = doc.querySelectorAll("tangy-form-item");
+        let formMetadata = doc.querySelector("tangy-form");
+        // for (let node of itemsNode) {
+        //   let item = {}
+        //   item.id = node.getAttribute('id')
+        //   item.src = node.getAttribute('src')
+        //   item.title = node.getAttribute('title')
+        //   // item.itemOrder = node.getAttribute('itemOrder')
+        //   item.formSrc = formSrc
+        //   this.classItems.push(item)
+        //   }
+        let formId = formMetadata.id
+        // get all responses for this form
+        let completedForms = []
+        // let itemId = item.id
+        console.log("getting responses for formId: " + formId)
 
+        try {
+          this.responses = await this.service.getResponsesByFormId(formId)
+        } catch (e) {
+          console.log("e: " + e)
+        }
+        console.log("formId: " + formId)
+        // let studentForms = this.studentForms.get(studentId)
+        let studentFormResponses = studentResponses.responses
         let progress = {
           formId: formId,
-          responseId: responseId,
-          _id: _id
+          responses: []
         }
-        if (typeof studentId !== 'undefined') {
-          let studentForms = this.studentForms.get(studentId)
-          if (typeof studentForms !== 'undefined') {
-            // add the form to the student array.
-            studentForms.push(progress)
-          } else {
-            studentForms = []
-            studentForms.push(progress)
-            this.studentForms.set(studentId, studentForms)
+        for (let response of this.responses) {
+          let studentIdInForm = response.studentId
+          let responseId = response.id
+          let _id = response._id
+
+          let formResponse = {
+            formId: formId,
+            responseId: responseId,
+            _id: _id
           }
-        } else {
-          let studentForms = []
-          studentForms.push(progress)
-          this.studentForms.set(studentId, studentForms)
+          if (typeof studentIdInForm !== 'undefined') {
+            if (studentIdInForm === studentId) {
+              progress.responses.push(formResponse)
+            }
+          }
         }
+        // studentForms.push(progress)
+        studentFormResponses.push(progress)
       }
+      this.studentForms.push(studentResponses)
     }
 
+    // console.log("this.studentForms: " + JSON.stringify(Array.from(this.studentForms)))
     console.log("this.studentForms: " + JSON.stringify(this.studentForms))
+    this.studentFormsArray = Array.from(this.studentForms)
     window['tangy-form-app-loading'].innerHTML = ''
   }
 
