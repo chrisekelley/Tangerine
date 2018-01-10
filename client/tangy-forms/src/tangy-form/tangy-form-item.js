@@ -9,7 +9,7 @@ import '../../node_modules/@polymer/paper-card/paper-card.js'
 import * as tangyFormActions from './tangy-form-actions.js'
 
 // Import relevant actions.
-import { 
+import {
   ITEM_OPEN,
   itemOpen,
   ITEM_CLOSE,
@@ -188,9 +188,9 @@ paper-card {
         // Listen for tangy inputs dispatching INPUT_VALUE_CHANGE.
         this.$.content.addEventListener('INPUT_VALUE_CHANGE', (event) => {
           this.store.dispatch({
-            type: 'INPUT_VALUE_CHANGE',  
-            inputName: event.detail.inputName, 
-            inputValue: event.detail.inputValue, 
+            type: 'INPUT_VALUE_CHANGE',
+            inputName: event.detail.inputName,
+            inputValue: event.detail.inputValue,
             inputInvalid: event.detail.inputInvalid,
             inputIncomplete: event.detail.inputIncomplete
           })
@@ -198,7 +198,7 @@ paper-card {
 
         // Subscribe to the store to reflect changes.
         this.unsubscribe = this.store.subscribe(this.throttledReflect.bind(this))
- 
+
     }
 
     disconnectedCallback() {
@@ -207,7 +207,7 @@ paper-card {
 
     // Prevent parallel reflects, leads to race conditions.
     throttledReflect(iAmQueued = false) {
-      // If there is an reflect already queued, we can quit. 
+      // If there is an reflect already queued, we can quit.
       if (this.reflectQueued && !iAmQueued) return
       if (this.reflectRunning) {
         this.reflectQueued = true
@@ -230,7 +230,7 @@ paper-card {
       // Set state in input elements.
       let inputs = [].slice.call(this.$.content.querySelectorAll('[name]'))
       inputs.forEach((input) => {
-        let index = state.inputs.findIndex((inputState) => inputState.name == input.name) 
+        let index = state.inputs.findIndex((inputState) => inputState.name == input.name)
         if (index !== -1) input.setProps(state.inputs[index])
       })
 
@@ -253,7 +253,20 @@ paper-card {
         let input = state.inputs.find((input) => input.name == name)
         if (input) return input.value
       }
-      let inputHide = tangyFormActions.inputHide 
+      let setValue = (name, value) => {
+        // let ele = this.$.content.querySelector(name)
+        let state = this.store.getState()
+        let input = state.inputs.find((input) => input.name == name)
+        if (input) {
+          input.value = value
+        }
+      }
+      let getStateValue = (name) => {
+        let state = this.store.getState()
+        let value = state[name]
+        return value
+      }
+      let inputHide = tangyFormActions.inputHide
       let inputShow = tangyFormActions.inputShow
       let inputEnable = tangyFormActions.inputEnable
       let inputDisable = tangyFormActions.inputDisable
@@ -307,7 +320,7 @@ paper-card {
         return true
       }
     }
-    
+
 
   }
 

@@ -5,7 +5,7 @@ import '../../node_modules/@polymer/paper-input/paper-input.js'
 
     /**
      * `tangy-input`
-     * 
+     *
      *
      * @customElement
      * @polymer
@@ -68,6 +68,7 @@ export class TangyInput extends PolymerElement {
           hidden: {
             type: Boolean,
             value: false,
+            observer: 'onHiddenChange',
             reflectToAttribute: true
           },
           invalid: {
@@ -120,6 +121,14 @@ export class TangyInput extends PolymerElement {
         }
       }
 
+      onHiddenChange(value) {
+        if (value === false) {
+          this.$.input.removeAttribute('hidden')
+        } else {
+          this.$.input.setAttribute('hidden', true)
+        }
+      }
+
       onDisabledChange(value) {
         if (value === false) {
           this.$.input.removeAttribute('disabled')
@@ -137,7 +146,7 @@ export class TangyInput extends PolymerElement {
       }
 
       onValueChange(value) {
-        this.$.input.setAttribute('value', value) 
+        this.$.input.setAttribute('value', value)
       }
 
       validate() {
