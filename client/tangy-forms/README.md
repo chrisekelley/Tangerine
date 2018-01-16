@@ -58,6 +58,11 @@ target to include the files you may be working on.
 
 cd to client and run `yarn start` to run the http-server.
 
+# Class demo
+
+The Settings icon under the Class Dashboard header takes you to the form for creating a new class (if it’s the first time
+you’ve configured the app) and also has a link for creating Students.
+
 ## Ckeditor5
 
 The ckeditor5 editor is built using webpack. Use `yarn ckeditor` to build it.
